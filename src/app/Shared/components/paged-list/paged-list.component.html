@@ -1,0 +1,154 @@
+<div class="card">
+    <p-table [lazy]="true" (onLazyLoad)="getData($event)" dataKey="id" [paginator]="true" [rows]="10"
+        [totalRecords]="totalRecords" [loading]="loading" editMode="row" #dt1 [value]="itemsList" [columns]="columns"
+        [rowHover]="true" [totalRecords]="paginationMetaData?.totalCount ?? itemsList?.length" [paginator]="true"
+        [rows]="paginationMetaData?.pageSize ?? 10" [loading]="loading" [resizableColumns]="true"
+        [rowsPerPageOptions]="[10, 20, 30, 40, 50]" styleClass="p-datatable-gridlines"
+        [globalFilterFields]="globalFilterFields" responsiveLayout="scroll">
+        <ng-template pTemplate="caption">
+            <div class="row justify-content-between">
+                <div class="col-xxl-3 col-xl-4 col-lg-5 col-md-5 col-sm-12">
+                    <div class="input-with-btn">
+                        <span class="p-input-icon-left d-block">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" #filter
+                                (input)="dt1.filterGlobal($event.target.value, 'contains')"
+                                placeholder="{{'common.search' |translate}}" class="form-control" />
+                        </span>
+                        <button pButton class="p-element p-button btn-sm p-component btn-icon p-button-outlined"
+                            (click)="clear(dt1)">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M2.39 1.73L1.11 3L9 10.89V15.87C8.96 16.16 9.06 16.47 9.29 16.7L13.3 20.71C13.69 21.1 14.32 21.1 14.71 20.71C14.94 20.5 15.04 20.18 15 19.88V16.89L20.84 22.73L22.11 21.46L15 14.35V14.34L13 12.35L11 10.34L4.15 3.5L2.39 1.73M6.21 3L8.2 5H16.96L13.11 9.91L15 11.8V10.75L19.79 4.62C20.13 4.19 20.05 3.56 19.62 3.22C19.43 3.08 19.22 3 19 3H6.21M11 12.89L13 14.89V17.58L11 15.58V12.89Z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-xl-4 col-lg-5 col-md-5 col-sm-12">
+                    <div class="input-with-btn justify-content-end ">
+                        <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()"
+                            class="p-button-danger mr-2" pTooltip="PDF" tooltipPosition="top"
+                            placeholder="Top"></button>
+                        <button pButton class="p-element p-button btn-sm p-component btn-icon p-button-success"
+                            pTooltip="XLS" tooltipPosition="top" placeholder="Top" (click)="exportExcel()">
+                            <i class="pi pi-file-excel"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="sort-th">#</th>
+                <th *ngFor="let col of columns" pSortableColumn="{{ col.field}}">
+                    <div class="flex justify-content-between align-items-center">
+                        <div class="d-flex">
+                            <p-sortIcon field="{{ col.field}}"></p-sortIcon>
+                            <span class="table-header-text"> {{col.title | translate}}</span>
+                        </div>
+                        <p-columnFilter matchMode="contains" display="menu" [showMatchModes]="true"
+                            [showOperator]="false" [showAddButton]="false" type="text" field="{{ col.field}}"
+                            display="menu" placeholder="{{col.title | translate}}"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="width: 8rem">
+                    <div class="text-center">
+                        {{ "common.tableAction" | translate }}
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="rowData">
+                <td class="sort-td"> {{ri +1 }}</td>
+                <td *ngFor="let col of columns">
+                    <p-cellEditor>
+                        <ng-template pTemplate="input"
+                            *ngIf="col.editModeType !== 'dropDown' && col.editable !== false">
+                            <input class="form-control" pInputText type="text" [(ngModel)]="rowData[col.field]"
+                                required>
+                        </ng-template>
+                        <ng-template pTemplate="input"
+                            *ngIf="col.editModeType === 'dropDown' && col.editable !== false && !col.dropDownItemsList">
+                            <p-dropdown emptyMessage="{{'common.noDataAvailable'| translate}}" [options]="selectList"
+                                filter="true" filterBy="name" [showClear]="true" appendTo="body" optionValue="id"
+                                optionLabel="name" [(ngModel)]="rowData[col.dropDownFieldName]"
+                                [style]="{'width':'100%'}"></p-dropdown>
+                        </ng-template>
+
+                        <ng-template pTemplate="input"
+                            *ngIf="col.editModeType === 'dropDown' && col.editable !== false && col.dropDownItemsList ">
+                            <p-dropdown emptyMessage="{{'common.noDataAvailable'| translate}}"
+                                [options]="col.dropDownItemsList" filter="true" filterBy="name" [showClear]="true"
+                                appendTo="body" optionValue="id" optionLabel="name"
+                                [(ngModel)]="rowData[col.dropDownFieldName]" [style]="{'width':'100%'}"></p-dropdown>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            <span *ngIf="col.pipe === Pipes.date"
+                                pTooltip=" {{getFieldValue(rowData[col.field]) | date: (col.pipeFormat || 'dd/MM/yyyy')}}"
+                                tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                                {{ getFieldValue(rowData[col.field]) | date: (col.pipeFormat || 'dd/MM/yyyy') }}
+                            </span>
+                            <span *ngIf="col.pipe === Pipes.money"
+                                pTooltip="{{ getFieldValue(rowData[col.field]) | number:'1.2-2' : 'en-us'}}"
+                                tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                                {{ getFieldValue(rowData[col.field]) | number:'1.2-2' : 'en-us'}}
+                            </span>
+                            <span *ngIf="!col.pipe">
+                                {{rowData[col.field]}}
+                            </span>
+
+                        </ng-template>
+                    </p-cellEditor>
+
+                </td>
+
+
+                <td class="text-center" style="min-width: 8rem">
+                    <button class="btn btn-edit btn-tble-action" *ngIf="!editing && HideEditBtn && ShowCustomEdit"
+                        pButton pRipple type="button" (click)="OnCustomEditInit(rowData)">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+                        </svg>
+                    </button>
+                    <button class="btn btn-edit btn-tble-action" *ngIf="!editing && !HideEditBtn" pButton pRipple
+                        type="button" pInitEditableRow (click)="onRowEditInit(rowData)">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+                        </svg>
+                    </button>
+
+                    <button class="btn btn-edit btn-tble-action" *ngIf="editing" pButton pRipple type="button"
+                        pSaveEditableRow (click)="onRowEditSave(rowData)">
+                        <i class="pi pi-check"></i>
+                    </button>
+
+                    <button class="btn btn-remove btn-tble-action" *ngIf="editing" pButton pRipple type="button"
+                        pCancelEditableRow (click)="onRowEditCancel(rowData, ri)">
+                        <i class="pi pi-times"></i>
+                    </button>
+                    <button class="btn btn-remove btn-tble-action" *ngIf="!editing && !HideDeleteBtn" pButton pRipple
+                        type="button" (click)="onRowDeleteInit(rowData)">
+                        <svg-icon class="icon" [name]="'remove-icon'"></svg-icon>
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            {{"common.total" | translate}} : {{paginationMetaData?.totalCount}} {{"common.items" | translate}}
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [attr.colspan]="columns.length+2"> {{"common.noDataAvailable" | translate}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td [attr.colspan]="columns.length+2">{{"common.loading" | translate}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>

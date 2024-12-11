@@ -1,0 +1,72 @@
+<div class="card">
+    <p-table dataKey="id" #dataTable [value]="itemsList" [rows]="10" [columns]="columns" [loading]="loading"
+        selectionMode="single" [(selection)]="selected" [rowHover]="true" sortMode="multiple" responsiveLayout="scroll"
+        styleClass="p-datatable-gridlines" [paginator]="true" [globalFilterFields]="globalFilterFields">
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="sort-th">#</th>
+                <th *ngFor="let col of filteredColumns" pSortableColumn="{{ col.field}}">
+                    <div *ngIf="col.field == 'isActive'" class="text-center">
+                        {{col.title | translate}}
+                    </div>
+                    <div *ngIf="col.field != 'isActive'" class="flex justify-content-between align-items-center">
+                        <div class="d-flex">
+                            <span class="table-header-text"> {{col.title | translate}}</span>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-editing="editing" let-ri="rowIndex">
+            <tr (click)="onRowInitSelected(rowData)">
+                <td class="sort-td"> {{ri +1 }}</td>
+                <td *ngFor="let col of filteredColumns">
+                    <p-cellEditor>
+                        <ng-template pTemplate="output">
+                            <span *ngIf="col.pipe === Pipes.date"
+                                pTooltip=" {{getFieldValue(rowData[col.field]) | date: (col.pipeFormat || 'dd/MM/yyyy')}}"
+                                tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                                {{ getFieldValue(rowData[col.field]) | date: (col.pipeFormat || 'dd/MM/yyyy') }}
+                            </span>
+                            <span *ngIf="col.pipe === Pipes.money"
+                                pTooltip="{{ getFieldValue(rowData[col.field]) | number:'1.2-2' : 'en-us'}}"
+                                tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                                {{ getFieldValue(rowData[col.field]) | number:'1.2-2' : 'en-us'}}
+                            </span>
+                            <span *ngIf="col.pipe === Pipes.number"
+                                pTooltip="{{ getFieldValue(rowData[col.field]) | number:'1.0-1' : 'en-us'}}"
+                                tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                                {{ getFieldValue(rowData[col.field]) | number:'1.0-1' : 'en-us'}}
+                            </span>
+                            <span *ngIf="!col.pipe && col.field !== 'close_remarks'">
+                                {{rowData[col.field]}}
+                            </span>
+                            <span *ngIf="col.field === 'close_remarks'" [ngClass]="{
+                                'text-success': rowData.action_flg == opnionVal.Customer_Satisfied,
+                                'text-danger': rowData.action_flg == opnionVal.Customer_NotSatisfied
+                              }">
+                                {{rowData[col.field]}}
+                            </span>
+                            <span *ngIf="col.field === 'close_remarks'">
+                                {{rowData[col.field]}}
+                            </span>
+                        </ng-template>
+                    </p-cellEditor>
+
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [attr.colspan]="columns.length+2"> {{"common.noDataAvailable" | translate}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td [attr.colspan]="columns.length+2">{{"common.loading" | translate}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

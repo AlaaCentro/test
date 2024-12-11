@@ -1,0 +1,28 @@
+<div class="card py-0 form-card">
+    <div class="row">
+        <div class="col-lg-12 p-3 main-info-border mt-3">
+            <div class="row g-4 ">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                    <p-fileUpload #uploader name="assessments[]" [showUploadButton]="false"
+                        class="control custom-columen" [showCancelButton]="false" styleClass="choose-btn"
+                        chooseLabel="choose a file or image" chooseIcon="pi pi-paperclip"
+                        (onSelect)="onFileSelected($event)" [customUpload]="true" (onClear)="onRemoveFile()"
+                        (onRemove)="onRemoveFile()" accept="image/jpeg">
+                    </p-fileUpload>
+                </div>
+
+            </div>
+            <div class="row">
+                <div
+                    class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 d-flex align-items-center justify-content-end mt-3">
+
+                    <button type="submit" class="p-element p-button p-component d-flex justify-content-center"
+                        style="width: 10%" (click)="test()">
+                        <i class="p-button-icon mx-2 p-button-icon-left pi pi-cloud-upload"></i>{{ "common.uploadBtn" |
+                        translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

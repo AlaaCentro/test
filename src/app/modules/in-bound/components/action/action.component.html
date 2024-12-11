@@ -1,0 +1,391 @@
+<form [formGroup]="form">
+
+    <div class="card py-0 form-card">
+        <div class="row">
+            <div class="col-lg-12 p-3 main-info-border">
+                <div class="row g-4 ">
+
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="voiceId" class="form-control" [readOnly]="true"
+                                formControlName="id" />
+                            <label htmlFor="voiceId">{{ "action.voiceId" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-12 ">
+                        <div class="p-float-label">
+                            <p-calendar [style]="{ width: '100%' }" [dateFormat]="'dd/mm/yy'" [showIcon]="true"
+                                formControlName="act_date">
+                            </p-calendar>
+
+                            <label htmlFor="actionDate" class="form-label">{{ "action.actionDate" |
+                                translate
+                                }}</label>
+                        </div>
+                    </div>
+                    <!--
+                <div class="col-xl-4 col-lg-4 col-md-6 col-12 ">
+                    <button class="p-element p-button-outlined p-button p-component mx-3">
+                        <svg-icon class="icon" [name]="'send-outline'"></svg-icon>
+                        {{ "action.sendSMS" | translate }}
+                    </button>
+                    <p-button class="">
+                        <svg-icon class="icon" [name]="'chevron-double-right'"></svg-icon>
+                        {{ "action.smsHistory" | translate }}
+                    </p-button>
+                </div> -->
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                        <div class="p-float-label">
+                            <textarea id="float-input" rows="4" cols="30" [readOnly]="true" pInputTextarea
+                                formControlName="eng_action_comments" class="form-control"></textarea>
+                            <label for="float-input">{{'action.actionHistory'| translate}}</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card py-0 form-card">
+        <div class="row">
+            <div class="col-lg-12 p-3 mt-1 main-info-border">
+                <div class="row g-4 ">
+
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-12 ">
+                        <div class="p-float-label">
+                            <p-calendar [style]="{ width: '100%' }" [dateFormat]="'dd/mm/yy'" [showIcon]="true"
+                                formControlName="crm_action_date">
+                            </p-calendar>
+
+                            <label htmlFor="crmActionDate" class="form-label">{{ "action.crmActionDate" |
+                                translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-12 ">
+                        <div class="p-float-label">
+                            <p-calendar [style]="{ width: '100%' }" [dateFormat]="'dd/mm/yy'" [showIcon]="true"
+                                formControlName="crm_followup_date">
+                            </p-calendar>
+
+                            <label htmlFor="nextFollow" class="form-label">{{ "action.nextFollow" |
+                                translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-12 ">
+                        <div class="">
+                            <p-dropdown [options]="ministryList" optionLabel="name"
+                                selectedItemsLabel="{0} items selected" itemid="id" [style]="{ width: '100%' }"
+                                [showClear]="true" showEmptyMessage="true" dropdown="true"
+                                placeholder="{{ 'action.ministryVoice' | translate }}" optionValue="id"
+                                emptyMessage="{{ 'common.noDataAvailable' | translate }}" field="name"
+                                (onClick)="GetCrmMinistryList('')" formControlName="crm_ministry_reason">
+                            </p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-12 ">
+                        <button class="p-element p-button-outlined p-button p-component w-100"
+                            (click)="GetCrmActionHis()">
+                            {{ "action.crmActionHis" | translate }}
+                        </button>
+                    </div>
+
+                    <div class="col-xl-9 col-lg-9 col-md-9 col-12 ">
+                        <div class="p-float-label">
+                            <textarea id="crmFollowComment" rows="4" cols="30" pInputTextarea
+                                [readOnly]="!permission.hasPermission(permissions.crm_action_update)"
+                                formControlName="eng_crm_follow_comment" class="form-control"></textarea>
+                            <label for="crmFollowComment">{{'action.crmFollowComment'| translate}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-12 ">
+                        <div class="row g-4 ">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-12 btn-con">
+                                <button class="p-element p-button-outlined p-button p-component mx-3"
+                                    (click)="sendSMS()">
+                                    <svg-icon class="icon" [name]="'send-outline'"></svg-icon>
+                                    {{ "action.sendSMS" | translate }}
+                                </button>
+                                <p-button class="" (click)="showSMSHistory()">
+                                    <svg-icon class="icon" [name]="'chevron-double-right'"></svg-icon>
+                                    {{ "action.smsHistory" | translate }}
+                                </p-button>
+                            </div>
+
+                            <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 ">
+                                <div class="main-check-box mt-3">
+                                    <!-- (onChange)="isAutoChanged($event)"  -->
+                                    <p-checkbox [binary]="true" inputId="closeReady"
+                                        [disabled]="!permission.hasPermission(permissions.crm_action_update)">
+                                    </p-checkbox>
+                                    <label class="check-box-label" for="closeReady">
+                                        {{ "action.closeReady" | translate }}
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12  mb-2">
+                        <div class="row">
+                            <div *ngFor="let item of actionCustomerList" class="col-2 ">
+                                <div>
+                                    <input class="form-check-input mt-1" [id]="item.label+item.value+1" type="radio"
+                                        [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedCustomer"
+                                        [value]="item.value" />
+
+                                    <label class="english-title ml-2" style="font-size: 13px; font-weight: bold;"
+                                        [ngClass]="{
+                                    'text-success': item.value == opnionVal.Customer_Satisfied,
+                                    'text-danger': item.value == opnionVal.Customer_NotSatisfied,
+                                    'text-info': item.value == opnionVal.No_Releted
+                                  }" [for]="item.label+item.value+1">
+                                        {{ "action.ActionCustomerEnum." + item.label | translate }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card py-0 form-card pt-2">
+        <div class="row">
+
+            <div class="col-lg-5 p-3 main-info-border">
+                <div class="row g-4 ">
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                        <div class="p-float-label">
+                            <p-calendar [style]="{ width: '100%' }" [dateFormat]="'dd/mm/yy'" [showIcon]="true"
+                                formControlName="close_date" inputId="icon">
+                            </p-calendar>
+
+                            <label htmlFor="closedDate" class="form-label">{{ "action.closedDate" |
+                                translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                        <div class="p-float-label">
+                            <textarea id="filnalRemark" rows="4" cols="30" pInputTextarea class="form-control"
+                                formControlName="eng_final_remarks"></textarea>
+                            <label for="filnalRemark">{{'action.filnalRemark'| translate}}</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-2 p-3 main-info-border align-items-center d-flex justify-content-center">
+                <div class="row g-4 ">
+                    <div class="col-lg-12 p-3 main-info-border">
+                        <div *ngFor="let item of langList" class="col-12 p-2">
+                            <input class="form-check-input mt-1" [id]="item.label+item.value+1" type="radio"
+                                [ngModelOptions]="{standalone: true}" [(ngModel)]="fff" [value]="item.value" />
+                            <label class="english-title ml-2" style="
+                        font-size: 13px;
+                        font-weight: bold;
+                    " [for]="item.label+item.value+1">
+                                {{ "action.LangEnum."+ item.label | translate}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 p-3 main-info-border">
+
+                <div class="row g-4 ">
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                        <div class="p-float-label">
+                            <p-calendar [style]="{ width: '100%' }" [dateFormat]="'dd/mm/yy'" [showIcon]="true"
+                                formControlName="next_followup_date" inputId="itcon">
+                            </p-calendar>
+                            <label htmlFor="nextFollowUp" class="form-label">{{ "action.nextFollowUp" |
+                                translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                        <div class="p-float-label">
+                            <textarea id="redakRemarks" rows="4" cols="30" pInputTextarea
+                                formControlName="redak_close_remarks" class="form-control"></textarea>
+                            <label for="redakRemarks">{{'action.redakRemarks'| translate}}</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-6 p-3 main-info-border">
+            <div class="card py-0 form-card">
+                <div class="row g-4 my-0">
+
+                    <div class="col-lg-3  pb-3">
+                        <div *ngFor="let item of actionStatusList" class="col-12 pb-3">
+                            <input class="form-check-input mt-1" [id]="item.label+item.value+1" type="radio"
+                                [disabled]="!permission.hasPermission(permissions.crm_ministory_update)"
+                                [ngModelOptions]="{standalone: true}" [(ngModel)]="fff" [value]="item.value" />
+                            <label class="english-title ml-2" style="
+                        font-size: 13px;
+                        font-weight: bold;
+                    " [for]="item.label+item.value+1">
+                                {{ "action.ActionStatusEnum."+ item.label | translate}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-9 col-lg-9 col-md-9 col-12 ">
+                        <div class="p-float-label">
+                            <textarea id="ministryVoiceRemark" rows="4" cols="30" pInputTextarea
+                                [readOnly]="!permission.hasPermission(permissions.crm_ministory_update)"
+                                class="form-control"></textarea>
+                            <label for="ministryVoiceRemark">{{'action.ministryVoiceRemark'| translate}}</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 p-3 main-info-border">
+            <div class="card py-0 form-card">
+                <div class="row g-4 my-0">
+
+                    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12">
+                        <div class="row g-4 my-0">
+
+                            <div class="container mt-4">
+                                <div class="row align-items-center g-3">
+                                    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-12">
+                                        <div class="d-flex align-items-center">
+                                            <div class="form-check mx-2">
+                                                <input class="form-check-input" type="checkbox" id="compensation"
+                                                    [readOnly]="!permission.hasPermission(permissions.crm_ministory_update)">
+                                                <label class="form-check-label " for="compensation">{{
+                                                    "action.compensation"|
+                                                    translate}}</label>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <input type="number" class="form-control form-days" placeholder="Days">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-12">
+                                        <div class="d-flex align-items-center">
+                                            <div class="form-check mx-2">
+                                                <input class="form-check-input" type="checkbox" id="delayReply"
+                                                    [readOnly]="!permission.hasPermission(permissions.crm_ministory_update)">
+                                                <label class="form-check-label " for="delayReply">{{
+                                                    "action.delayReply"|
+                                                    translate}}</label>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <input type="number" class="form-control form-days" placeholder="Days">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="replied">
+                                            <label class="form-check-label" for="replied">Replied</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 mb-3 ml-2">
+                                        <p-calendar [showIcon]="true"
+                                            [disabled]="!permission.hasPermission(permissions.crm_ministory_update)"
+                                            placeholder="{{ 'action.escalateDate'|
+                                        translate}}"></p-calendar>
+                                    </div>
+
+                                    <div class="col-5 mb-3">
+                                        <button class="p-element p-button-outlined p-button p-component w-100"
+                                            (click)="GetCrmMinistryHis()">
+                                            <svg-icon class="icon" [name]="'chevron-double-right'"></svg-icon>
+                                            {{ "action.ministryActionHistory" | translate }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <hr>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+
+
+<p-dialog header='{{ "action.crmActionHis"| translate }}' [(visible)]="visibleCrmAct"
+    [style]="{ width: '50vw', height: '300px', 'min-height': '100px' }">
+    <ul *ngFor="let item of crmActionList">
+        <li>{{item.eng_action_comm}}</li>
+    </ul>
+    <p *ngIf="crmActionList">
+        {{ "action.noHistory"| translate }}
+    </p>
+</p-dialog>
+
+
+<p-dialog header='{{ "action.ministryActionHistory"| translate }}' [(visible)]="visibleCrmMin"
+    [style]="{ width: '50vw', height: '300px', 'min-height': '100px' }">
+    <ul *ngFor="let item of crmMinList">
+        <li>{{item.eng_action_comm}}</li>
+    </ul>
+    <p *ngIf="crmMinList">
+        {{ "action.noHistory"| translate }}
+    </p>
+</p-dialog>
+
+<p-dialog header='{{ "action.smsHistory"| translate }}' [(visible)]="visibleSms"
+    [style]="{ width: '40vw', height: '300px', 'min-height': '100px' }">
+    <p-table [value]="SmsList" [tableStyle]="{ 'min-width': '40rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Mobile</th>
+                <th>Send Daqte</th>
+                <th>Send By</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pro>
+            <tr>
+                <td>{{ pro.mobile }}</td>
+                <td>{{ pro.invdate }}</td>
+                <td>{{ pro.sent_by }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-dialog>

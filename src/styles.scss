@@ -1,0 +1,88 @@
+/* You can add global styles to this file, and also import other style files */
+$gutter: 1rem; //for primeflex grid system
+
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+@import "../node_modules/prismjs/themes/prism-coy.css";
+@import "assets/demo/flags/flags.css";
+@import "assets/demo/documentation.scss";
+@import "assets/layout/css/main-layout.scss";
+@import "~@angular/cdk/overlay-prebuilt.css";
+
+
+
+
+
+
+
+  .ngx-tourguide--button {
+    cursor: pointer;
+    &:focus-visible {
+      outline: none;
+      border-color: #296abd;
+    }
+
+    &:hover,
+    &:active {
+      color: #fff;
+      background-color: #296abd;
+    }
+
+    &:active {
+      border-color: transparent;
+      box-shadow: inset 2px 3px 6px rgb(0 0 0 / 20%),
+        inset -3px -2px 6px rgb(255 255 255 / 20%);
+    }
+  }
+
+  .ngx-tour-guide {
+    .tour-guide--container {
+      padding: 1rem;
+      border: none;
+      border-radius:0.25rem;
+
+      &:not(.tour-guide--skip) {
+        box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+          rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
+          rgba(0, 0, 0, 0.1) 0px 8px 10px -6px;
+      }
+    }
+
+    .tour-guide--overlay {
+      background-color: rgba(4, 15, 17, 0.75);
+      backdrop-filter: none;
+    }
+
+    .tour-guide--stop {
+      .stop-title {
+        color: var(--bs-secondary);
+        text-transform: uppercase;
+        padding-bottom: 0.25rem;
+        position: relative;
+        font-size: 1.5rem;
+        font-weight: 400;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+
+        &::after {
+          content: "";
+          height: 1px;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: var(--bs-secondary);
+        }
+      }
+      .stop-content{
+        color: #333;
+      }
+      .stop-counter {
+        color: var(--bs-dark);
+        [index] {
+          color: var(--bs-secondary);
+        }
+      }
+    }
+  }

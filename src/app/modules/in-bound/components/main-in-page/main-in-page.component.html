@@ -1,0 +1,218 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="search-patient mt-4">
+            <i class="pi pi-search"></i>
+            <input placeholder="{{ 'inBound.search' | translate}}" [minLength]="2" class="w-100" type="text" pInputText
+                [(ngModel)]="searched" />
+        </div>
+    </div>
+</div>
+
+<div class="layout-breadcrumb row align-items-center px-0">
+    <div class="col-lg-8 col-md-7 col-12">
+        <div class="breadcrumb">
+            <div class="route-bar-breadcrumb">
+                <li>
+                    {{ "menu.inBound" | translate }}
+                </li>
+                <li>
+                    <i class="pi pi-angle-right"></i>
+                    {{title}}
+                </li>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="layout-dashboard">
+    <div class="row">
+        <div class="col-12 col-md-12 col-xl-4" (click)="displayComp(Components.Voice_Info)">
+            <div class="card card-component overview-box blue">
+                <div class="card-header" style="padding-bottom: 5px;background-color: transparent;">
+                    <h6> {{'inBound.voice_information' | translate}}</h6>
+                    <div class="header-buttons">
+                        <svg-icon [name]="'voive-info-icon'"></svg-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-4" (click)="displayComp(Components.Action)">
+            <div class="card card-component overview-box blue">
+                <div class="card-header" style="padding-bottom: 5px;background-color: transparent;">
+                    <h6> {{'inBound.action' | translate}}</h6>
+                    <div class="header-buttons">
+                        <svg-icon [name]="'action-icon'"></svg-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-4" (click)="displayComp(Components.Attach)">
+            <div class="card card-component overview-box blue">
+                <div class="card-header" style="padding-bottom: 5px;background-color: transparent;">
+                    <h6> {{'inBound.attached_image' | translate}}</h6>
+                    <div class="header-buttons">
+                        <svg-icon [name]="'attach-icon'"></svg-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-4" (click)="displayComp(Components.History)">
+            <div class="card card-component overview-box blue">
+                <div class="card-header" style="padding-bottom: 5px;background-color: transparent;">
+                    <h6> {{'inBound.history' | translate}}</h6>
+                    <div class="header-buttons">
+                        <svg-icon [name]="'history-icon'"></svg-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-4" (click)="displayComp(Components.Service)">
+            <div class="card card-component overview-box blue">
+                <div class="card-header" style="padding-bottom: 5px;background-color: transparent;">
+                    <h6> {{'inBound.services_history' | translate}}</h6>
+                    <div class="header-buttons">
+                        <svg-icon [name]="'service-icon'"></svg-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-4" (click)="displayComp(Components.Componsation)">
+            <div class="card card-component overview-box blue">
+                <div class="card-header" style="padding-bottom: 5px;background-color: transparent;">
+                    <h6> {{'inBound.compensation' | translate}}</h6>
+                    <div class="header-buttons">
+                        <svg-icon [name]="'componsation-icon'"></svg-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="col-12 col-md-12 col-xl-4" (click)="displayComp(Components.Pending)">
+            <div class="card card-component overview-box blue">
+                <div class="card-header" style="padding-bottom: 5px;background-color: transparent;">
+                    <h6> {{'inBound.pending_for_close' | translate}}</h6>
+                    <div class="header-buttons">
+                        <svg-icon [name]="'pending-icon'"></svg-icon>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!--
+        <div class="col-12 col-md-12 col-xl-3" (click)="displayComp(Components.Query)">
+            <div class="card card-component overview-box blue">
+                <div class="card-header" style="padding-bottom: 5px;background-color: transparent;">
+                    <h6> {{'inBound.query_ref_no' | translate}}</h6>
+                    <div class="header-buttons">
+                        <svg-icon [name]="'query-icon'"></svg-icon>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-12 col-md-12 col-xl-12 mt-3">
+            <div class="card">
+                <app-voice-info [hidden]="!voiceInfo" [searched]="searched"
+                    (dataEmitter)="onVoiceInfoDataReceived($event)" [actionRef]="actionRef"></app-voice-info>
+                <app-action [hidden]="!action" [receivedData]="searchedData"></app-action>
+                <app-attach-image *ngIf="Attach" [receivedData]="searchedData"></app-attach-image>
+                <app-history *ngIf="History" [searched]="searched"></app-history>
+                <app-service *ngIf="Service" [searched]="searched"></app-service>
+                <app-componsation *ngIf="Componsation" [searched]="searched"></app-componsation>
+                <!-- <app-pending-close *ngIf="Pending"></app-pending-close> -->
+                <!-- <app-query-ref *ngIf="Query"></app-query-ref> -->
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<ngx-ui-loader></ngx-ui-loader>
+<p-toast></p-toast>
+
+
+
+
+<div class=" flex justify-content-center">
+    <p-toast position="top-right" key="c" [baseZIndex]="5000" [showTransformOptions]="'translateY(100%)'"
+        [showTransitionOptions]="'1000ms'" [hideTransitionOptions]="'1000ms'"
+        [showTransformOptions]="'translateX(100%)'">
+        <ng-template let-message pTemplate="message">
+            <div class="flex flex-column" style="flex: 1">
+                <div class="text-center mb-3">
+                    <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+                    <h5>{{message.summary}}</h5>
+                    <p>{{message.detail}}</p>
+                </div>
+                <div *ngIf="message.data?.chisses?.length">
+                    <ul>
+                        <li *ngFor="let chiss of message.data.chisses" style="cursor: pointer"
+                            (click)="onChassisSelect(chiss)" class="my-2 list-Item">
+                            {{ chiss }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>
+</div>
+
+
+
+<p-dialog header='{{ "popSearch.method"| translate }}' [(visible)]="showSearch" (onHide)="CloseDialog()"
+    [style]="{ width: '50vw', height: '220px', 'min-height': '220px' }">
+    <form [formGroup]="form">
+        <h5>{{ "popSearch.noChaises"| translate }} </h5>
+        <div class="row mt-4 justify-content-center">
+
+            <div class="col-xl-5 col-lg-5 col-md-5 col-12 ">
+                <div class="">
+                    <p-dropdown emptyMessage="{{'common.noDataAvailable'| translate}}" [filter]="false"
+                        formControlName="type" [options]="seaechFieldList" [style]="{ width: '100%' }"
+                        placeholder="{{'popSearch.searchType'| translate}}" [showClear]="true">
+                        <ng-template let-item pTemplate="selectedItem">
+                            <div class="country-item country-item-value">
+                                {{ "popSearch.SearchFieldEnum."+ item.label | translate}}
+                            </div>
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            <div class="country-item">
+                                {{ "popSearch.SearchFieldEnum."+ item.label | translate}}
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+                <p-message
+                    *ngIf="form.get('type').errors?.required&& (formSubmited || form.get('type').touched)"
+                    severity="error" text='{{"popSearch.valType" | translate}}'>
+                </p-message>
+            </div>
+
+            <div class="col-xl-5 col-lg-5 col-md-5 col-12 ">
+                <div class="p-float-label">
+                    <input pInputText id="enter" class="form-control" formControlName="field" />
+                    <label htmlFor="enter">{{ "popSearch.enter" | translate }}</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div
+                class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 d-flex align-items-center justify-content-end mt-3">
+                <button type="button" class="p-element p-button p-component d-flex justify-content-center"
+                    style="width: 10%" (click)="SearchChaiss()">
+                    <i class="p-button-icon mx-2 p-button-icon-left pi pi-search"></i>{{ "common.searchBtn" | translate
+                    }}
+                </button>
+            </div>
+        </div>
+    </form>
+</p-dialog>

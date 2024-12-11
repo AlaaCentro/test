@@ -1,0 +1,36 @@
+<app-shared-list [itemsList]="itemsList" [columns]="columns" (onRowSelected)="onRowSelected($event)"></app-shared-list>
+
+
+<div class="card py-0 form-card pt-2">
+    <div class="row">
+        <div class="col-lg-6 p-3 main-info-border">
+            <div class="row g-4 ">
+
+                <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                    <div class="p-float-label">
+                        <textarea id="customerVoice" rows="4" cols="30" pInputTextarea class="form-control"
+                            [(ngModel)]="item.customer_voice" [autoResize]="true" [readonly]="true"></textarea>
+                        <label for="customerVoice">{{'history.customerVoice'| translate}}</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-6 p-3 main-info-border">
+
+            <div class="row g-4 ">
+
+                <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                    <div class="p-float-label">
+                        <textarea id="crmFollow" rows="4" cols="30" pInputTextarea class="form-control"
+                            [(ngModel)]="item.crm_follow_up_remarks" [autoResize]="true" [readonly]="true"></textarea>
+                        <label for="crmFollow">{{'history.crmFollow'| translate}}</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

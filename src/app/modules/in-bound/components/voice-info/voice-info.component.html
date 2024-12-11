@@ -1,0 +1,568 @@
+<form [formGroup]="form">
+
+    <div class="card py-0 form-card">
+
+        <div class="row">
+            <div class="col-lg-12 p-3 main-info-border">
+                <div class="row g-4 mt-3">
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 ">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon" (click)="searchVoice()">
+                                <i class="pi pi-search"></i>
+                            </span>
+                            <input pInputText placeholder="{{ 'voiceInfo.searchByVoice' | translate }}"
+                                (keypress)="numberOnly($event)" [(ngModel)]="voiceId"
+                                [ngModelOptions]="{standalone: true}" maxlength="9">
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 ">
+                        <div class="">
+                            <p-dropdown [options]="sourceList" optionLabel="name"
+                                selectedItemsLabel="{0} items selected" itemid="id" [(ngModel)]="selectedSource"
+                                [style]="{ width: '100%' }" [showClear]="true" showEmptyMessage="true" dropdown="true"
+                                placeholder="{{ 'voiceInfo.selectSource' | translate }}" optionValue="id"
+                                emptyMessage="{{ 'common.noDataAvailable' | translate }}" field="name"
+                                (onClick)="GetSourceList('')" formControlName="source">
+                            </p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="date" class="form-control" [readOnly]="true"
+                                formControlName="sysDate" />
+                            <label htmlFor="date" class="form-label">{{ "voiceInfo.date&time" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="refNum" class="form-control" formControlName="ref_no" [readOnly]="!permission.hasPermission(permissions.crm_voice_update)" />
+                            <label htmlFor="refNum" class="form-label">{{ "voiceInfo.refNum" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 ">
+                        <p-dropdown emptyMessage="{{'common.noDataAvailable'| translate}}" [filter]="false" [disabled]="!permission.hasPermission(permissions.crm_voice_update)"
+                            [options]="statusList" [style]="{ width: '100%' }" formControlName="status"
+                            placeholder="{{'voiceInfo.status'| translate}}" [showClear]="true">
+                            <ng-template let-item pTemplate="selectedItem">
+                                <div class="country-item country-item-value">
+                                    {{ "voiceInfo.StatusEnum."+ item.label | translate}}
+                                </div>
+                            </ng-template>
+                            <ng-template let-item pTemplate="item">
+                                <div class="country-item">
+                                    {{ "voiceInfo.StatusEnum."+ item.label | translate}}
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="createdById" class="form-control" [readOnly]="true" />
+                            <label htmlFor="createdById" class="form-label">{{ "voiceInfo.createdById" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="createdByName" class="form-control" [readOnly]="true" />
+                            <label htmlFor="createdByName" class="form-label">{{ "voiceInfo.createdByName" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 ">
+                        <div class="p-float-label">
+
+                            <p-calendar [style]="{ width: '100%' }" [dateFormat]="'dd/mm/yy'" [showIcon]="true"
+                                formControlName="ministry_report_date" inputId="icon" readonlyInput="true" [disabled]="!permission.hasPermission(permissions.crm_voice_update)" >
+                            </p-calendar >
+
+                            <label htmlFor="ministryReportedDt" class="form-label">{{ "voiceInfo.ministryReportedDt" |
+                                translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="row g-4 mt-3">
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="jobCard" class="form-control" formControlName="job_card"
+                                [readOnly]="true" />
+                            <label htmlFor="jobCard">{{ "voiceInfo.jobCard" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="main-check-box">
+                            (onChange)="isAutoChanged($event)"
+                            <p-checkbox [binary]="true" inputId="disability">
+                            </p-checkbox>
+                            <label class="check-box-label" for="disability">
+                                {{ "voiceInfo.disability" | translate }}
+                            </label>
+                        </div>
+                    </div> -->
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="jobDate" class="form-control" [readOnly]="true"
+                                formControlName="job_date" />
+                            <label htmlFor="jobDate">{{ "voiceInfo.jobDate" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="invoice" class="form-control" [readonly]="true" />
+                            <label htmlFor="invoice">{{ "voiceInfo.invoice" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                    <div class="p-float-label">
+                        <input pInputText id="invDate" class="form-control" [readOnly]="true" />
+                        <label htmlFor="invDate">{{ "voiceInfo.invDate" | translate }}</label>
+                    </div>
+                </div> -->
+
+                    <!-- <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                    <div class="p-float-label">
+                        <input pInputText id="invType" class="form-control" [readOnly]="true" />
+                        <label htmlFor="invType">{{ "voiceInfo.invType" | translate }}</label>
+                    </div>
+                </div> -->
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <div class="p-inputgroup">
+                                <input dir="ltr" type="text" class="p-inputtext p-component p-element" maxlength="11"
+                                    formControlName="mobile" [readOnly]="true">
+                                <span class="p-inputgroup-addon bg-transparent " style="cursor: pointer"
+                                    (click)="makeCall(infoData?.items[0].mobile)">
+                                    <svg-icon class="icon" name="user-phone"></svg-icon>
+                                </span>
+                            </div>
+                            <!-- <label class="ml-2" htmlFor="mobile">{{ "voiceInfo.mobile" | translate }}</label> -->
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="rceDate" class="form-control" [readOnly]="true" />
+                            <label htmlFor="rceDate">{{ "voiceInfo.rceDate" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="appDate" class="form-control" [readOnly]="true"
+                                formControlName="appt_date" />
+                            <label htmlFor="appDate">{{ "voiceInfo.appDate" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="telephone" class="form-control" formControlName="tel"
+                                [readOnly]="true" />
+                            <label htmlFor="telephone">{{ "voiceInfo.telephone" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="service_contract_id" class="form-control" [readOnly]="true"
+                                formArrayName="service_contract_id" />
+                            <label htmlFor="service_contract_id">{{ "voiceInfo.sevice_contact_id" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="contract_start_date" class="form-control" [readOnly]="true"
+                                formArrayName="contract_start_date" />
+                            <label htmlFor="contract_start_date">{{ "voiceInfo.contract_start_date" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="contract_end_date" class="form-control" [readOnly]="true"
+                                formControlName="contract_end_date" />
+                            <label htmlFor="contract_end_date">{{ "voiceInfo.contract_end_date" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="arbClient" class="form-control" formControlName="cust_name_arb"
+                                [readOnly]="true" />
+                            <label htmlFor="arbClient">{{ "voiceInfo.arbClient" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="engClient" class="form-control" formControlName="cust_name_eng"
+                                [readOnly]="true" />
+                            <label htmlFor="engClient">{{ "voiceInfo.engClient" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-2 col-md-2 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="custCode" class="form-control" formControlName="cust_code"
+                                [readOnly]="true" />
+                            <label htmlFor="custCode" class="form-label">{{ "voiceInfo.custCode" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="warranty_until" class="form-control" [readOnly]="true"
+                                formControlName="warranty_until" />
+                            <label htmlFor="warranty_until">{{ "voiceInfo.warranty_until" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="promDate" class="form-control" [readOnly]="true"
+                                formControlName="prom_date" />
+                            <label htmlFor="promDate">{{ "voiceInfo.promDate" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="company_arb" class="form-control" [readOnly]="true"
+                                formControlName="company_arb" />
+                            <label htmlFor="company_arb">{{ "voiceInfo.arbComp" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-12">
+                        <div class="p-float-label">
+                            <input pInputText id="company_eng" class="form-control" [readOnly]="true"
+                                formControlName="company_eng" />
+                            <label htmlFor="company_eng">{{ "voiceInfo.company" | translate }}</label>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-6 p-3 main-info-border">
+            <div class="card py-0 form-card">
+                <div class="row g-4 my-3">
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="chassis" class="form-control" formControlName="chassis"
+                                [readOnly]="true" />
+                            <label htmlFor="chassis" class="form-label">{{ "voiceInfo.chassis" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="plateNo" class="form-control" formControlName="plate_no"
+                                [readOnly]="true" />
+                            <label htmlFor="plateNo" class="form-label">{{ "voiceInfo.plateNo" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="year" class="form-control" formControlName="model_year"
+                                [readOnly]="true" />
+                            <label htmlFor="year" class="form-label">{{ "voiceInfo.year" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="mileage" class="form-control" formControlName="mileage"
+                                [readOnly]="true" />
+                            <label htmlFor="mileage" class="form-label">{{ "voiceInfo.mileage" | translate }}</label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 " hidden="true">
+                        <div class="p-float-label">
+                            <input pInputText id="model" class="form-control" formControlName="model_code"
+                                [readOnly]="true" />
+                            <label htmlFor="model" class="form-label">{{ "voiceInfo.model" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="model_desc" class="form-control" formControlName="model_desc"
+                                [readOnly]="true" />
+                            <label htmlFor="model_desc" class="form-label">{{ "voiceInfo.model_desc" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="email" class="form-control" formControlName="email"
+                                [readOnly]="true" />
+                            <label htmlFor="email" class="form-label">{{ "voiceInfo.email" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="deliveryDate" class="form-control" formControlName="receive_date"
+                                [readOnly]="true" />
+                            <label htmlFor="deliveryDate" class="form-label">{{ "voiceInfo.deliveryDate" | translate
+                                }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 " hidden="true">
+                        <div class="p-float-label">
+                            <input pInputText id="franchise_code" class="form-control" formControlName="franchise_code"
+                                [readOnly]="true" />
+                            <label htmlFor="franchise_code">{{ "voiceInfo.franchise_code" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="franchise_eng" class="form-control" formControlName="franchise_eng"
+                                [readOnly]="true" />
+                            <label htmlFor="franchise_eng">{{ "voiceInfo.franchiseEn" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-12 ">
+                        <div class="p-float-label">
+                            <input pInputText id="franchise_arb" class="form-control" formControlName="franchise_arb"
+                                [readOnly]="true" />
+                            <label htmlFor="franchise_arb">{{ "voiceInfo.franchiseAr" | translate }}</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 p-3 main-info-border">
+            <div class="card py-0 form-card">
+                <div class="row g-4 my-3">
+
+                    <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-12">
+                        <div class="">
+                            <p-dropdown [options]="logTypeList" optionLabel="name"
+                                selectedItemsLabel="{0} items selected" itemid="id" [style]="{ width: '100%' }"
+                                [showClear]="true" showEmptyMessage="true" dropdown="true"
+                                placeholder="{{ 'voiceInfo.selectLogType' | translate }}" optionValue="id"
+                                emptyMessage="{{ 'common.noDataAvailable' | translate }}" field="name"
+                                (onClick)="GetlogTypeList('')" formControlName="comp_type"
+                                (onClear)="clearlogType($event)" (onChange)="clearlogType($event)">
+                            </p-dropdown>
+                            <!-- (onClear)="clearlogType($event)" (onChange)="clearlogType($event)" -->
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-12">
+                        <div class="">
+                            <p-multiSelect [style]="{ width: '100%' }" [options]="chossenList"
+                                defaultLabel="Select a Diagnoses" optionLabel="name"
+                                selectedItemsLabel="{0} items selected" itemid="id" [showClear]="true"
+                                showEmptyMessage="true" dropdown="true" placeholder="{{'common.select'| translate}}"
+                                emptyMessage="{{'common.noDataAvailable'| translate}}" field="name"
+                                (onClick)="GetComplainList(form.get('comp_type').value)" (onChange)="changeLogs($event)"
+                                (onClear)="clearList()" [ngModelOptions]="{standalone: true}"
+                                [(ngModel)]="selectedItems">
+                            </p-multiSelect>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-12">
+                        <div class="">
+
+                            <p-dropdown emptyMessage="{{'common.noDataAvailable'| translate}}" [filter]="false"
+                                [options]="langList" [style]="{ width: '100%' }" formControlName="sms_lang"
+                                placeholder="{{'voiceInfo.selectSmsLang'| translate}}" [showClear]="true">
+                                <ng-template let-item pTemplate="selectedItem">
+                                    <div class="country-item country-item-value">
+                                        {{ "action.LangEnum."+ item.label | translate}}
+                                    </div>
+                                </ng-template>
+                                <ng-template let-item pTemplate="item">
+                                    <div class="country-item">
+                                        {{ "action.LangEnum."+ item.label | translate}}
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-12">
+                        <div class="">
+                            <p-dropdown emptyMessage="{{'common.noDataAvailable'| translate}}" [filter]="false"
+                                [options]="langList" [style]="{ width: '100%' }" formControlName="cust_lang"
+                                placeholder="{{'voiceInfo.selectCustLang'| translate}}" [showClear]="true">
+                                <ng-template let-item pTemplate="selectedItem">
+                                    <div class="country-item country-item-value">
+                                        {{ "action.LangEnum."+ item.label | translate}}
+                                    </div>
+                                </ng-template>
+                                <ng-template let-item pTemplate="item">
+                                    <div class="country-item">
+                                        {{ "action.LangEnum."+ item.label | translate}}
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xl-8 col-lg-8 col-md-8 col-8 ">
+                        <div class="p-float-label">
+                            <textarea id="float-inputww" rows="4" cols="20" pInputTextarea class="form-control"
+                                [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedLogs"
+                                [readOnly]="true"></textarea>
+                            <label for="float-inputww">{{'voiceInfo.clientVoice'| translate}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-4 ">
+                        <div class="p-float-label">
+                            <textarea id="float-input" rows="4" cols="20" pInputTextarea class="form-control" [readOnly]="!permission.hasPermission(permissions.crm_voice_update)"
+                                formControlName="cust_note"></textarea>
+                            <label for="float-input">{{'voiceInfo.custNote'| translate}}</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card py-0 pt-3 form-card">
+        <div class="row">
+            <div class="col-lg-12 p-3 main-info-border">
+                <div class="row g-3 pb-1">
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-6 ">
+                        <div class="p-float-label">
+                            <input pInputText id="dept" class="form-control" formControlName="assign_dept"
+                                [readOnly]="true" />
+                            <label htmlFor="dept" class="form-label">{{ "voiceInfo.dept" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-6 ">
+                        <div class="p-float-label">
+                            <input pInputText id="DepEn" class="form-control" formControlName="department_desc_eng"
+                                [readOnly]="true" />
+                            <label htmlFor="DepEn" class="form-label">{{ "voiceInfo.DepEn" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-6 ">
+                        <div class="p-float-label">
+                            <input pInputText id="DepAr" class="form-control" formControlName="department_desc_arb"
+                                [readOnly]="true" />
+                            <label htmlFor="DepAr" class="form-label">{{ "voiceInfo.DepAr" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-6 mt-4 ">
+                        <div class="p-float-label">
+                            <input pInputText id="branch" class="form-control" formControlName="assign_branch"
+                                [readOnly]="true" />
+                            <label htmlFor="branch">{{ "voiceInfo.branch" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-6 mt-4 ">
+                        <div class="p-float-label">
+                            <input pInputText id="branchDEn" class="form-control" formControlName="branch_desc_eng"
+                                [readOnly]="true" />
+                            <label htmlFor="branchDEn">{{ "voiceInfo.branchDEn" | translate }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-6 mt-4 ">
+                        <div class="p-float-label">
+                            <input pInputText id="branchDAr" class="form-control" formControlName="branch_desc_arb"
+                                [readOnly]="true" />
+                            <label htmlFor="branchDAr">{{ "voiceInfo.branchDAr" | translate }}</label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-12 ">
+                        <div class="p-float-label">
+                            <textarea id="float-nput" rows="3" formControlName="eng_assign_comments" pInputTextarea [readOnly]="!permission.hasPermission(permissions.crm_voice_update)"
+                                class="form-control"></textarea>
+                            <label for="float-nput">{{'voiceInfo.comment'| translate}}</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="row">
+    <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-12 d-flex align-items-center justify-content-end mt-3">
+        <button type="submit" *ngIf="!voiceId" class="p-element p-button p-component d-flex justify-content-center"
+            style="width: 10%" (click)="submit()">
+            <i class="p-button-icon mx-2 p-button-icon-left pi pi-save"></i>{{ "common.saveBtn" | translate }}
+        </button>
+        <button type="submit" *ngIf="voiceId" class="p-element p-button p-component d-flex justify-content-center"
+            style="width: 10%" (click)="submit()">
+            <i class="p-button-icon mx-2 p-button-icon-left pi pi-sync"></i>{{ "common.updateBtn" | translate }}
+        </button>
+    </div>
+</div>
+
+<!-- <p-toast position="top-center" key="cc"></p-toast> -->
+
+
+<p-toast position="top-center" key="cc" [baseZIndex]="5000" [showTransformOptions]="'translateY(100%)'"
+    [showTransitionOptions]="'1000ms'" [hideTransitionOptions]="'1000ms'" [showTransformOptions]="'translateX(100%)'">
+    <ng-template let-message pTemplate="message">
+        <div class="flex flex-column" style="flex: 1">
+            <div class="text-center mb-3">
+                <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+                <h5>{{message.summary}}</h5>
+                <p>{{message.detail}}</p>
+                <p>Voice Id : {{message.data.id}}</p>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

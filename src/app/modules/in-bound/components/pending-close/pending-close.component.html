@@ -1,0 +1,121 @@
+<div class="row">
+    <div class="col-lg-12 p-3 mt-1 main-info-border">
+        <div class="row g-4 justify-content-around">
+
+            <div class="col-xl-3 col-lg-3 col-md-6 col-12 text-end">
+                <button class="p-element p-button-outlined p-button p-component mx-3 w-100">
+                    <svg-icon [name]="'sync-icon'" class="mb-1 mx-1"></svg-icon>
+                    {{ "pendingClose.fetchPending" | translate }}
+                </button>
+            </div>
+
+            <div class="col-xl-3 col-lg-3 col-md-6 col-12 text-end">
+                <button class="p-element p-button-outlined p-button p-component w-100">
+                    <svg-icon [name]="'processClose-icon'" class="mb-1 mx-1"></svg-icon>
+                    {{ "pendingClose.ProcessClose" | translate }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <p-table dataKey="id" #dataTable [value]="itemsList" [rows]="10" [columns]="columns" [rowHover]="true"
+        sortMode="multiple" responsiveLayout="scroll" styleClass="p-datatable-gridlines"
+        [globalFilterFields]="globalFilterFields">
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="sort-th">#</th>
+                <th *ngFor="let col of filteredColumns" pSortableColumn="{{ col.field}}">
+                    <div *ngIf="col.field == 'isActive'" class="text-center">
+                        {{col.title | translate}}
+                    </div>
+                    <div *ngIf="col.field != 'isActive'" class="flex justify-content-between align-items-center">
+                        <div class="d-flex">
+                            <span class="table-header-text"> {{col.title | translate}}</span>
+                        </div>
+
+                    </div>
+                </th>
+                <th class="text-center">
+                    {{"common.tableAction" | translate}}
+                </th>
+            </tr>
+            <tr>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="rowData">
+                <td class="sort-td"> {{ri +1 }}</td>
+                <td *ngFor="let col of filteredColumns">
+                    <p-cellEditor>
+                        <ng-template pTemplate="output">
+                            <span *ngIf="col.pipe === Pipes.date"
+                                pTooltip=" {{getFieldValue(rowData[col.field]) | date: (col.pipeFormat || 'dd/MM/yyyy')}}"
+                                tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                                {{ getFieldValue(rowData[col.field]) | date: (col.pipeFormat || 'dd/MM/yyyy') }}
+                            </span>
+                            <span *ngIf="col.pipe === Pipes.money"
+                                pTooltip="{{ getFieldValue(rowData[col.field]) | number:'1.2-2' : 'en-us'}}"
+                                tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                                {{ getFieldValue(rowData[col.field]) | number:'1.2-2' : 'en-us'}}
+                            </span>
+                            <span *ngIf="col.pipe === Pipes.number"
+                                pTooltip="{{ getFieldValue(rowData[col.field]) | number:'1.0-1' : 'en-us'}}"
+                                tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                                {{ getFieldValue(rowData[col.field]) | number:'1.0-1' : 'en-us'}}
+                            </span>
+                            <span *ngIf="!col.pipe && (!col.type || col.type == 0)">
+                                {{rowData[col.field]}}
+                            </span>
+                            <div *ngIf="col.type == 1" class="d-flex justify-content-between m-auto w-75">
+                                <div class="form-check custome-toggle mx-auto">
+                                    <input class="form-check-input" type="checkbox" value="" [readonly]="true"
+                                        (click)="confirmChangeStatus($event.target.checked ,rowData,$event )"
+                                        [checked]="rowData[col.field]" [id]="'status_' +ri" />
+                                    <label class="form-check-label" [for]="'status_' +ri">
+                                        <span class="active-title fw-semibold">
+                                            <i class="pi pi-check"></i>
+                                        </span>
+                                        <span class="inactive-title fw-semibold">
+                                            <i class="pi pi-times"></i>
+                                        </span>
+                                        <span class="circle">
+                                            <i class="pi pi-check"></i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-cellEditor>
+
+                </td>
+                <td style="text-align:center">
+                    <div class="col-lg-12 p-3 main-info-border d-flex justify-content-center">
+                        <div *ngFor="let item of closeList" class="col-2">
+                            <input class="form-check-input mt-1" [id]="item.label+item.value+1" type="radio"
+                                [(ngModel)]="fff" [value]="item.value" />
+                            <label class="english-title ml-2" style="
+                            font-size: 13px;
+                            font-weight: bold;
+                        " [for]="item.label+item.value+1" [ngClass]="{
+                                'text-info': item.value == closeEnum.in_Prog,
+                                'text-success': item.value == closeEnum.C_Satis,
+                                'text-danger': item.value == closeEnum.Not_Satis
+                              }">
+                                {{ "pendingClose.CloseStatusEnum."+ item.label | translate}}
+                            </label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [attr.colspan]="columns.length+2"> {{"common.noDataAvailable" | translate}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

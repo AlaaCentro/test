@@ -1,0 +1,110 @@
+<div class="card">
+    <p-virtualScroller [value]="itemsList" scrollHeight="450px" [itemSize]="100" [lazy]="true" (onLazyLoad)="onLazyInit($event)">
+        <!-- Header -->
+        <ng-template pTemplate="header">
+            <div class="row justify-content-between">
+                <div class="col-xxl-3 col-xl-4 col-lg-5 col-md-5 col-sm-12">
+                    <div class="input-with-btn">
+                        <span class="p-input-icon-left d-block">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" #filter
+                                (input)="dataTable.filterGlobal(  $event.target.value, 'contains'  )"
+                                placeholder="{{'common.search' |translate}}" class="form-control" />
+                        </span>
+                        <button pButton class="p-element p-button btn-sm p-component btn-icon p-button-outlined"
+                            (click)="clear()">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M2.39 1.73L1.11 3L9 10.89V15.87C8.96 16.16 9.06 16.47 9.29 16.7L13.3 20.71C13.69 21.1 14.32 21.1 14.71 20.71C14.94 20.5 15.04 20.18 15 19.88V16.89L20.84 22.73L22.11 21.46L15 14.35V14.34L13 12.35L11 10.34L4.15 3.5L2.39 1.73M6.21 3L8.2 5H16.96L13.11 9.91L15 11.8V10.75L19.79 4.62C20.13 4.19 20.05 3.56 19.62 3.22C19.43 3.08 19.22 3 19 3H6.21M11 12.89L13 14.89V17.58L11 15.58V12.89Z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <!-- Items -->
+        <ng-template let-item pTemplate="item">
+            <div class="row">
+                <div class="col-1">{{ itemsList.indexOf(item) + 1 }}</div>
+                <div class="col" *ngFor="let col of filteredColumns">
+                    <span *ngIf="col.pipe === Pipes.date"
+                        pTooltip="{{ getFieldValue(item[col.field]) | date: (col.pipeFormat || 'dd/MM/yyyy')}}"
+                        tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                        {{ getFieldValue(item[col.field]) | date: (col.pipeFormat || 'dd/MM/yyyy') }}
+                    </span>
+                    <span *ngIf="col.pipe === Pipes.money"
+                        pTooltip="{{ getFieldValue(item[col.field]) | number:'1.2-2' : 'en-us'}}"
+                        tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                        {{ getFieldValue(item[col.field]) | number:'1.2-2' : 'en-us'}}
+                    </span>
+                    <span *ngIf="col.pipe === Pipes.number"
+                        pTooltip="{{ getFieldValue(item[col.field]) | number:'1.0-1' : 'en-us'}}"
+                        tooltipPosition="top" class="text-truncate mw-100 d-inline-block">
+                        {{ getFieldValue(item[col.field]) | number:'1.0-1' : 'en-us'}}
+                    </span>
+                    <span *ngIf="!col.pipe && (!col.type || col.type == 0)">
+                        {{ item[col.field] }}
+                    </span>
+                    <div *ngIf="col.type == 1" class="d-flex justify-content-between m-auto w-75">
+                        <div class="form-check custome-toggle mx-auto">
+                            <input class="form-check-input" type="checkbox" value="" [readonly]="true"
+                                (click)="confirmChangeStatus($event.target.checked ,item,$event )"
+                                [checked]="item[col.field]" />
+                            <label class="form-check-label">
+                                <span class="active-title fw-semibold">
+                                    <i class="pi pi-check"></i>
+                                </span>
+                                <span class="inactive-title fw-semibold">
+                                    <i class="pi pi-times"></i>
+                                </span>
+                                <span class="circle">
+                                    <i class="pi pi-check"></i>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="col text-center" style="min-width: 8rem">
+                    <div>
+                        <button class="btn btn-edit btn-tble-action" *ngIf="!HideEditBtn" pButton pRipple type="button"
+                            (click)="onRowEditInit(item)">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+                            </svg>
+                        </button>
+
+                        <button class="btn btn-remove btn-tble-action" *ngIf="!HideDeleteBtn" pButton pRipple type="
+                            button" (click)="onRowDeleteInit(item)">
+                            <svg-icon class="icon" [name]="'remove-icon'"></svg-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <!-- Loading -->
+        <ng-template pTemplate="loadingItem">
+            <div class="row">
+                <div class="col-12">Loading...</div>
+            </div>
+        </ng-template>
+
+        <!-- Empty Message -->
+        <ng-template pTemplate="emptymessage">
+            <div class="row">
+                <div class="col-12 text-center">
+                    {{ "common.noDataAvailable" | translate }}
+                </div>
+            </div>
+        </ng-template>
+
+        <!-- Summary -->
+        <ng-template pTemplate="summary">
+            {{ "common.total" | translate }} : {{ itemsList?.length }} {{ "common.items" | translate }}
+        </ng-template>
+    </p-virtualScroller>
+</div>

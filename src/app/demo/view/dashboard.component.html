@@ -1,0 +1,183 @@
+<div class="layout-breadcrumb row align-items-center px-0">
+    <div class="col-lg-8 col-md-7 col-12">
+        <div class="breadcrumb">
+            <div class="route-bar-breadcrumb">
+                <li>
+                    {{ "dashboard.title" | translate }}
+                </li>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layout-dashboard">
+    <div class="row">
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="card overview-box blue">
+                <div class="card-header" style="padding-bottom: 10px">
+                    <h6> {{'inBound.voice_information' | translate}}</h6>
+                    <div class="header-buttons">
+                        <a href="#"><i class="pi pi-arrow-up"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="card overview-box blue">
+                <div class="card-header" style="padding-bottom: 10px">
+                    <h6> {{'inBound.inBound' | translate}}</h6>
+                    <div class="header-buttons">
+                        <a href="#"><i class="pi pi-arrow-up"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="card overview-box blue">
+                <div class="card-header" style="padding-bottom: 10px">
+                    <h6> {{'inBound.attached_image' | translate}}</h6>
+                    <div class="header-buttons">
+                        <a href="#"><i class="pi pi-arrow-up"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="card overview-box blue">
+                <div class="card-header" style="padding-bottom: 10px">
+                    <h6> {{'inBound.history' | translate}}</h6>
+                    <div class="header-buttons">
+                        <a href="#"><i class="pi pi-arrow-up"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="card overview-box blue">
+                <div class="card-header" style="padding-bottom: 10px">
+                    <h6> {{'inBound.services_history' | translate}}</h6>
+                    <div class="header-buttons">
+                        <a href="#"><i class="pi pi-arrow-up"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="card overview-box blue">
+                <div class="card-header" style="padding-bottom: 10px">
+                    <h6> {{'inBound.compensation' | translate}}</h6>
+                    <div class="header-buttons">
+                        <a href="#"><i class="pi pi-arrow-up"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="card overview-box blue">
+                <div class="card-header" style="padding-bottom: 10px">
+                    <h6> {{'inBound.pending_for_close' | translate}}</h6>
+                    <div class="header-buttons">
+                        <a href="#"><i class="pi pi-arrow-up"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="card overview-box blue">
+                <div class="card-header" style="padding-bottom: 10px">
+                    <h6> {{'inBound.query_ref_no' | translate}}</h6>
+                    <div class="header-buttons">
+                        <a href="#"><i class="pi pi-arrow-up"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-9">
+            <div class="card sale-graph">
+                <div class="card-header">
+                    <h6>Top Products</h6>
+                </div>
+                <div id="order-tabs-container" class="order-tabs">
+                    <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===0}"
+                        (click)="changeDataset($event); orders.refresh()" data-label="New Sales" data-index="0"
+                        data-stroke="#00acac">
+                        <h6>Current Week</h6>
+                        <h3>$455.55</h3>
+                    </div>
+                    <div class="order-tab" [ngClass]="{'order-tab-active':activeOrders===1}"
+                        (click)="changeDataset($event); orders.refresh()" data-label="Previous Sales" data-index="1"
+                        data-stroke="#2f8ee5">
+                        <h6>Previous Week</h6>
+                        <h3>$244.40</h3>
+                    </div>
+                </div>
+                <div class="overview-chart">
+                    <p-chart #orders type="line" [data]="ordersChart" [options]="ordersOptions" [responsive]="true">
+                    </p-chart>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-xl-3">
+            <div class="row">
+                <div class="col-12 col-md-6 col-xl-12">
+                    <div class="card traffic">
+                        <div class="card-header">
+                            <h6>Traffic</h6>
+                        </div>
+                        <span>26 May - 27 May</span>
+                        <div class="traffic-chart">
+                            <p-chart #traffic type="doughnut" [data]="trafficChart" [options]="trafficOptions"
+                                [responsive]="true" [style]="{'position': 'relative', 'width': '50%'}"></p-chart>
+                        </div>
+                        <div id="traffic-tabs-container" class="traffic-tabs">
+                            <div class="traffic-tab" [ngClass]="{'traffic-tab-active':activeTraffic===0}"
+                                (click)="changeTrafficset($event); traffic.refresh()" data-label="New Sales"
+                                data-index="0">
+                                <h6>48%</h6>
+                                <i class="pi pi-facebook"></i>
+                                <span>Facebook</span>
+                            </div>
+                            <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===1}"
+                                (click)="changeTrafficset($event); traffic.refresh()" data-label="Previous Sales"
+                                data-index="1">
+                                <h6>26%</h6>
+                                <i class="pi pi-twitter"></i>
+                                <span>Twitter</span>
+                            </div>
+                            <div class="traffic-tab " [ngClass]="{'traffic-tab-active':activeTraffic===2}"
+                                (click)="changeTrafficset($event); traffic.refresh()" data-label="Previous Sales"
+                                data-index="2">
+                                <h6>17%</h6>
+                                <i class="pi pi-github"></i>
+                                <span>Github</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-12">
+                    <div class="card goals">
+                        <div class="card-header">
+                            <h6>Today's Goal</h6>
+                            <span><span>183</span> / 255</span>
+                        </div>
+                        <span>22 June, 2020</span>
+                        <div class="goal-graph">
+                            <p-chart #goal type="pie" [data]="goalChart" [options]="goalOptions" [responsive]="true"
+                                [style]="{'width': '50%'}"></p-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
